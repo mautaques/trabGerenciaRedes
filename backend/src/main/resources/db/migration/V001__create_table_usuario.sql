@@ -1,5 +1,5 @@
 CREATE TABLE usuario (
-    id INT PRIMARY KEY NOT NULL,
+    id INT PRIMARY KEY NOT NULL auto_increment,
     nome VARCHAR(200) NOT NULL,
     login VARCHAR(100) NOT NULL,
     senha VARCHAR(100) NOT NULL,

@@ -1,10 +1,12 @@
 CREATE TABLE equipamento_porta (
-    id INT PRIMARY KEY NOT NULL,
-    id_equipamento INT NOT NULL,
-    id_sala INT NOT NULL,
-    bloqueio DATE,
-    fim_bloqueio DATE,
+    id INT PRIMARY KEY NOT NULL auto_increment,
+    equipamento_origem_id INT NOT NULL,
+    equipamento_destino_id INT NOT NULL,
+    sala_id INT NOT NULL,
+    bloqueio DATETIME,
+    fim_bloqueio DATETIME,
 
-    FOREIGN KEY (id_equipamento) REFERENCES equipamento(id),
-    FOREIGN KEY (id_sala) REFERENCES sala(id)
+    FOREIGN KEY (equipamento_origem_id) REFERENCES equipamento(id),
+    FOREIGN KEY (equipamento_destino_id) REFERENCES equipamento(id),
+    FOREIGN KEY (sala_id) REFERENCES sala(id)
 );
