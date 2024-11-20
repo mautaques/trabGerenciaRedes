@@ -7,6 +7,7 @@ import {
   fetchEquipamentoLivresBySalaService,
   createEquipamentoPortaService,
   updateEquipamentoPortaService,
+  fetchSalasService,
 } from "./service";
 
 const { GENERIC_MUTATION } = types;
@@ -17,46 +18,80 @@ const setUser = ({ commit }, value) =>
     value,
   });
 
-const fetchUsuario = async ({ dispatch }, { login, senha }) => {
+const fetchUsuario = async ({ commit, dispatch, state }, { login, senha }) => {
   const { usuarioByLoginAndSenha } = await fetchUsuarioService(login, senha);
-
+  dispatch("setSalaSelected", usuarioByLoginAndSenha?.equipamento?.sala);
+  await dispatch("fetchSalas");
+  const { salas } = state;
+  if (!usuarioByLoginAndSenha?.equipamento) {
+    dispatch("setSalaSelected", salas[0]);
+    commit(GENERIC_MUTATION, {
+      property: "isAdmin",
+      value: true,
+    });
+  }
   dispatch("setUser", usuarioByLoginAndSenha);
 };
 
 const fetchEquipamentoSala = async ({ commit, state }, salaId) => {
-  const { user } = state;
+  const { salaSelected } = state;
 
-  const { equipamentosBySala } = await fetchEquipamentoService(
-    salaId == null ? user?.equipamento?.sala?.id : salaId
-  );
+  if (salaSelected || salaId) {
+    const { equipamentosBySala } = await fetchEquipamentoService(
+      salaId == null ? salaSelected?.id : salaId
+    );
 
+    commit(GENERIC_MUTATION, {
+      property: "equipamentos",
+      value: equipamentosBySala,
+    });
+  }
+};
+
+const setSalaSelected = ({ commit, dispatch }, value) => {
   commit(GENERIC_MUTATION, {
-    property: "equipamentos",
-    value: equipamentosBySala,
+    property: "salaSelected",
+    value,
   });
+
+  dispatch("fetchEquipamentoSala");
+  dispatch("fetchEquipamentoLivresBySala");
 };
 
 const fetchEquipamentoPorta = async ({ commit, state }) => {
-  const { user } = state;
-  const { equipamentosPortas } = await fetchEquipamentoPortaService(
-    user.equipamento.id
-  );
+  const { salaSelected } = state;
+  if (salaSelected) {
+    const { equipamentosPortas } = await fetchEquipamentoPortaService(
+      salaSelected?.id
+    );
+
+    commit(GENERIC_MUTATION, {
+      property: "equipamentosPortas",
+      value: equipamentosPortas,
+    });
+  }
+};
+
+const fetchSalas = async ({ commit }) => {
+  const { salas } = await fetchSalasService();
 
   commit(GENERIC_MUTATION, {
-    property: "equipamentosPortas",
-    value: equipamentosPortas,
+    property: "salas",
+    value: salas,
   });
 };
 
 const fetchEquipamentoLivresBySala = async ({ commit, state }) => {
-  const { user } = state;
-  const { equipamentosBySalaLivres } =
-    await fetchEquipamentoLivresBySalaService(user?.equipamento?.sala?.id);
+  const { salaSelected } = state;
+  if (salaSelected) {
+    const { equipamentosBySalaLivres } =
+      await fetchEquipamentoLivresBySalaService(salaSelected?.id);
 
-  commit(GENERIC_MUTATION, {
-    property: "equipamentoslivres",
-    value: equipamentosBySalaLivres,
-  });
+    commit(GENERIC_MUTATION, {
+      property: "equipamentoslivres",
+      value: equipamentosBySalaLivres,
+    });
+  }
 };
 
 const createEquipamento = async ({ dispatch }, payload) => {
@@ -83,4 +118,6 @@ export default {
   fetchEquipamentoPorta,
   createEquipamento,
   createOrUpdateEquipamentoporta,
+  fetchSalas,
+  setSalaSelected,
 };

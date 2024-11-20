@@ -4,13 +4,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
-public class EquipamentoPortaCreateRequest {
-    Integer id;
-    Integer equipamentoOrigemId;
-    Integer equipamentoDestinoId;
+public class EquipamentoPortaBloqueioRequest {
+    List<Integer> ids;
     LocalDateTime dataBloqueio;
-    Integer numeroPorta;
 }

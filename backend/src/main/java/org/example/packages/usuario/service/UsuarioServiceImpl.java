@@ -28,10 +28,9 @@ public class UsuarioServiceImpl implements UsuarioService {
         NetworkInterface network = NetworkInterface.getByInetAddress(ip);
         byte[] mac = network.getHardwareAddress();
 
-
         String macAddress = "";
         for (int i = 0; i < mac.length; i++) {
-            String hexByte = String.format("%02X", mac[i]); // Converte o byte para hexadecimal
+            String hexByte = String.format("%02X", mac[i]);
             macAddress += hexByte + ((i < mac.length - 1) ? "-" : "");
         }
 
@@ -46,11 +45,16 @@ public class UsuarioServiceImpl implements UsuarioService {
 
         usuarioResponse.setUsuario(usuario);
 
+        if (usuario.getUsuarioChefe()) {
+            return usuarioResponse;
+        }
+
         Equipamento equipamento = equipamentoService.findByMac(macAddress);
 
         if (equipamento == null) {
             return null;
         }
+
 
         usuarioResponse.setEquipamento(equipamento);
 

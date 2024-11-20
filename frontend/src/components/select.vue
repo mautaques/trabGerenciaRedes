@@ -59,6 +59,13 @@ export default {
     internalValue(newVal) {
       this.$emit("update:modelValue", newVal);
     },
+    options: {
+      handler(newOptions) {
+        this.modifiedOptions = [...newOptions];
+        this.addMissingOption();
+      },
+      deep: true,
+    },
   },
   methods: {
     emitSelection() {

@@ -3,4 +3,7 @@ export default () => ({
   equipamentos: [],
   equipamentosPortas: [],
   equipamentoslivres: null,
+  salas: [],
+  salaSelected: null,
+  isAdmin: false,
 });

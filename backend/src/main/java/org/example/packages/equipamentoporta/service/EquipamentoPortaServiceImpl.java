@@ -5,11 +5,11 @@ import org.example.packages.equipamento.Equipamento;
 import org.example.packages.equipamento.EquipamentoRepository;
 import org.example.packages.equipamentoporta.EquipamentoPorta;
 import org.example.packages.equipamentoporta.EquipamentoPortaRepository;
+import org.example.packages.equipamentoporta.payload.EquipamentoPortaBloqueioRequest;
 import org.example.packages.equipamentoporta.payload.EquipamentoPortaCreateRequest;
-import org.example.packages.sala.Sala;
-import org.example.packages.sala.SalaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -20,14 +20,8 @@ public class EquipamentoPortaServiceImpl implements EquipamentoPortaService {
     private EquipamentoRepository equipamentoRepository;
 
     @Override
-    public List<EquipamentoPorta> findEquipamentosPortas(Integer equipamentoId) {
-        EquipamentoPorta equipamentoDestino = equipamentoPortaRepository.findEquipamentoDestino(equipamentoId);
-
-        List<EquipamentoPorta> equipamentoPortas = equipamentoPortaRepository.findEquipamentosPorta(equipamentoDestino.getEquipamentoDestino().getId());
-
-        equipamentoPortas.add(equipamentoDestino);
-
-        return equipamentoPortas;
+    public List<EquipamentoPorta> findEquipamentosPortas(Integer salaId) {
+        return equipamentoPortaRepository.findEquipamentosPorta(salaId);
     }
 
     @Override
@@ -41,8 +35,20 @@ public class EquipamentoPortaServiceImpl implements EquipamentoPortaService {
         equipamentoPorta.setEquipamentoDestino(equipamentoDestino);
         equipamentoPorta.setSala(equipamentoDestino.getSala());
         equipamentoPorta.setFimBloqueio(equipamentoPortaCreateRequest.getDataBloqueio());
+        equipamentoPorta.setNumeroPorta(equipamentoPortaCreateRequest.getNumeroPorta());
 
         equipamentoPortaRepository.save(equipamentoPorta);
+    }
+
+    @Override
+    public void bloqueioEquipamentos(EquipamentoPortaBloqueioRequest equipamentoPortaBloqueioRequest) {
+        LocalDateTime localDateTime = equipamentoPortaBloqueioRequest.getDataBloqueio();
+
+        if (localDateTime == null) {
+            localDateTime = LocalDateTime.now().plusHours(3);
+        }
+
+        equipamentoPortaRepository.updateEquipamentos(equipamentoPortaBloqueioRequest.getIds(), localDateTime);
     }
 
     @Override
@@ -56,6 +62,7 @@ public class EquipamentoPortaServiceImpl implements EquipamentoPortaService {
         equipamentoPorta.setEquipamentoDestino(equipamentoDestino);
         equipamentoPorta.setSala(equipamentoDestino.getSala());
         equipamentoPorta.setFimBloqueio(equipamentoPortaCreateRequest.getDataBloqueio());
+        equipamentoPorta.setNumeroPorta(equipamentoPortaCreateRequest.getNumeroPorta());
 
         equipamentoPortaRepository.save(equipamentoPorta);
     }

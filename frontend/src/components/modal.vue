@@ -69,6 +69,7 @@ export default {
   border-radius: 8px;
   position: relative;
   width: 500px;
+  min-width: 300px !important;
   max-width: fit-content;
   width: 100%;
 }

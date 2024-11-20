@@ -89,7 +89,7 @@ export default {
   },
 
   computed: {
-    ...mapState("storeModule", ["equipamentos", "user"]),
+    ...mapState("storeModule", ["equipamentos", "salaSelected"]),
   },
 
   methods: {
@@ -97,7 +97,7 @@ export default {
     create() {
       if (this.selectedOption) {
         this.createEquipamento({
-          salaId: this.user?.equipamento.sala.id,
+          salaId: this.salaSelected.id,
           tipoEquipamentoId: this.selectedOption,
         });
 

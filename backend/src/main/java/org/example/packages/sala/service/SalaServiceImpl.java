@@ -6,6 +6,8 @@ import org.example.packages.sala.SalaRepository;
 import org.example.packages.sala.payload.SalaRequest;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class SalaServiceImpl implements SalaService {
@@ -16,8 +18,13 @@ public class SalaServiceImpl implements SalaService {
     public void create(SalaRequest salaRequest) {
         Sala sala = new Sala();
 
-        sala.setNumeroSala(sala.getNumeroSala());
+        sala.setNumeroSala(salaRequest.getNumeroSala());
 
         salaRepository.save(sala);
+    }
+
+    @Override
+    public List<Sala> salas() {
+        return salaRepository.findAll();
     }
 }

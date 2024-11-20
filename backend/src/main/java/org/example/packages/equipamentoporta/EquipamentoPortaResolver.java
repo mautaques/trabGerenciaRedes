@@ -15,7 +15,7 @@ public class EquipamentoPortaResolver {
     private EquipamentoPortaService equipamentoPortaService;
 
     @GraphQLQuery
-    public List<EquipamentoPorta> equipamentosPortas(Integer equipamentoId) {
-        return equipamentoPortaService.findEquipamentosPortas(equipamentoId);
+    public List<EquipamentoPorta> equipamentosPortas(Integer salaId) {
+        return equipamentoPortaService.findEquipamentosPortas(salaId);
     }
 }

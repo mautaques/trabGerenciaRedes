@@ -38,14 +38,19 @@
 <script>
 import { makeRequest, makeGraphQLRequest } from "@/service/main";
 import { mapActions, mapState } from "vuex";
+import MeuModal from "@/components/modal.vue";
 
 export default {
+  components: {
+    MeuModal,
+  },
   data() {
     return {
       payload: {
         login: null,
         senha: null,
       },
+      showModal: false,
     };
   },
 
@@ -56,18 +61,21 @@ export default {
   },
 
   computed: {
-    ...mapState("storeModule", ["user"]),
+    ...mapState("storeModule", ["salaSelected", "user"]),
   },
 
   methods: {
     ...mapActions("storeModule", ["fetchUsuario", "fetchEquipamentoSala"]),
 
     async fazerLogin() {
-      await this.fetchUsuario({ login: "teste", senha: "teste" });
+      await this.fetchUsuario({ login: "teste2", senha: "teste2" });
 
-      if (JSON.parse(JSON.stringify(this.user))) {
-        await this.fetchEquipamentoSala(this.user.equipamento.sala.id);
-        this.$router.replace({ name: "cadastro" });
+      if (this.salaSelected) {
+        await this.fetchEquipamentoSala(this.salaSelected.id);
+
+        this.user?.usuario?.usuarioChefe
+          ? this.$router.replace({ name: "cadastro" })
+          : this.$router.replace({ name: "associacao" });
       }
     },
   },

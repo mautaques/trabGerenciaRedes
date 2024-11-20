@@ -1,6 +1,6 @@
-export default (equipamentoId) => `
+export default (salaId) => `
   {
-    equipamentosPortas(equipamentoId: ${equipamentoId}) {
+    equipamentosPortas(salaId: ${salaId}) {
         id
         equipamentoOrigem {
             id
@@ -22,6 +22,7 @@ export default (equipamentoId) => `
         }
         bloqueio
         fimBloqueio
+        numeroPorta
     }
   }
 `;

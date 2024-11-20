@@ -25,6 +25,7 @@ public class EquipamentoPorta {
     @ManyToOne
     private Sala sala;
 
+    private Integer numeroPorta;
     private Boolean bloqueio;
     private LocalDateTime fimBloqueio;
 }
