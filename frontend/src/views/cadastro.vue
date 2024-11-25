@@ -42,7 +42,7 @@
           <meu-input
             label="Sala"
             :disabled="true"
-            v-model="user.equipamento.sala.numeroSala"
+            v-model="salaSelected.numeroSala"
           ></meu-input>
         </div>
         <meu-select

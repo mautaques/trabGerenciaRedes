@@ -57,7 +57,7 @@ export default {
   name: "Login",
 
   async created() {
-    this.fazerLogin();
+    //this.fazerLogin();
   },
 
   computed: {
@@ -68,7 +68,7 @@ export default {
     ...mapActions("storeModule", ["fetchUsuario", "fetchEquipamentoSala"]),
 
     async fazerLogin() {
-      await this.fetchUsuario({ login: "teste2", senha: "teste2" });
+      await this.fetchUsuario({ login: this.login, senha: this.senha });
 
       if (this.salaSelected) {
         await this.fetchEquipamentoSala(this.salaSelected.id);

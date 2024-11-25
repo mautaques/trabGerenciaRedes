@@ -32,6 +32,9 @@ export const updateEquipamentoPortaService = (payload) =>
 export const updateEquipamentoBloqueioService = (payload) =>
   makeRequest("PATCH", "/equipamento_porta/desabilitar", payload);
 
+export const deteleBloqueioService = (payload) =>
+  makeRequest("PATCH", "/equipamento_porta/habilitar", payload);
+
 export const deleteEquipamentoPortaService = (id) =>
   makeRequest("DELETE", `/equipamento_porta/${id}`, null);
 

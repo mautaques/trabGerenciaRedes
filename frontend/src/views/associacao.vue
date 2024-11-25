@@ -107,19 +107,29 @@
         </div>
 
         <input
+          class="mb-3"
           type="checkbox"
           :disabled="e.equipamentoDestino?.tipoEquipamento?.id === 2"
           :checked="e.check"
           @change="handleChange(index)"
         />
       </div>
-      <button
-        class="p-2 mt-5"
-        style="border: 1px solid black; width: fit-content"
-        @click="openModalPortas"
-      >
-        Editar
-      </button>
+      <div class="flex gap-4">
+        <button
+          class="p-2 mt-5"
+          style="border: 1px solid black; width: fit-content"
+          @click="openModalPortas"
+        >
+          Editar
+        </button>
+        <button
+          class="p-2 mt-5"
+          style="border: 1px solid black; width: fit-content"
+          @click="deleteBloqueio"
+        >
+          Deletar bloqueio
+        </button>
+      </div>
 
       <meu-modal
         :title="'Desabilitar portas selecionadas'"
@@ -145,6 +155,7 @@ import { cloneDeep } from "lodash";
 import {
   deleteEquipamentoPortaService,
   updateEquipamentoBloqueioService,
+  deteleBloqueioService,
 } from "./store/service";
 
 export default {
@@ -295,11 +306,25 @@ export default {
       this.modalPortas = false;
     },
 
+    async deleteBloqueio() {
+      const payload = {
+        ids: this.equipamentos
+          .filter((item) => item.check)
+          .map((item) => item.id),
+      };
+
+      await deteleBloqueioService(payload);
+      await this.initiEquipamentos();
+
+      this.modalPortas = false;
+    },
+
     clearVariaveis() {
       this.selectDestino = null;
       this.selectOrigem = null;
       this.dataHora = null;
       this.id = null;
+      this.modalPortas = false;
       this.tipoDestino = null;
       this.abrirModal = false;
       this.tipoOrigem = null;
