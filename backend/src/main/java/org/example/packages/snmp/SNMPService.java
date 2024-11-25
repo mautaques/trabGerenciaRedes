@@ -13,9 +13,9 @@ import java.io.IOException;
 @Service
 public class SNMPService {
 
-    private final String community = "public"; // Substitua pela comunidade do seu switch
-    private final int snmpVersion = SnmpConstants.version2c; // Use v2c ou v3, dependendo do switch
-    private final int port = 161; // Porta padrão SNMP
+    private final String community = "private";
+    private final int snmpVersion = SnmpConstants.version2c;
+    private final int port = 161;
 
     public String setPortState(String ipAddress, int portIndex, boolean enable) {
         try {
@@ -25,26 +25,30 @@ public class SNMPService {
             target.setCommunity(new OctetString(community));
             target.setAddress(targetAddress);
             target.setRetries(2);
-            target.setTimeout(1500);
+            target.setTimeout(5000);
             target.setVersion(snmpVersion);
 
-            String oid = "1.3.6.1.2.1.2.2.1.7." + portIndex; // Base OID do IF-MIB + índice da porta
-            int state = enable ? 1 : 2; // 1 = up (habilitada), 2 = down (desabilitada)
+
+            String oid = ".1.3.6.1.2.1.2.2.1.1." + portIndex;
+            int state = enable ? 1 : 2;
 
             PDU pdu = new PDU();
             pdu.add(new VariableBinding(new OID(oid), new Integer32(state)));
             pdu.setType(PDU.SET);
 
-            // Envia o comando SNMP
+            System.out.println("Enviando SNMP para IP: " + ipAddress + ", Porta: " + port + ", OID: " + oid);
+
             TransportMapping<UdpAddress> transport = new DefaultUdpTransportMapping();
             Snmp snmp = new Snmp(transport);
             transport.listen();
 
             ResponseEvent response = snmp.send(pdu, target);
-            snmp.close();
 
-            // Verifica a resposta
-            if (response.getResponse() != null && response.getResponse().getErrorStatus() == PDU.noError) {
+            if (response == null || response.getResponse() == null) {
+                return "Erro: Não houve resposta do dispositivo SNMP.";
+            }
+
+            if (response.getResponse().getErrorStatus() == PDU.noError) {
                 return "Porta " + portIndex + " do switch " + ipAddress + " foi " +
                         (enable ? "habilitada" : "desabilitada") + " com sucesso.";
             } else {
@@ -52,6 +56,8 @@ public class SNMPService {
             }
         } catch (IOException e) {
             return "Erro na comunicação SNMP: " + e.getMessage();
+        } catch (Exception e) {
+            return "Erro inesperado: " + e.getMessage();
         }
     }
 }

@@ -15,4 +15,6 @@ public interface EquipamentoPortaService {
     void update(EquipamentoPortaCreateRequest equipamentoPortaCreateRequest);
 
     void bloqueioEquipamentos(EquipamentoPortaBloqueioRequest equipamentoPortaBloqueioRequest);
+
+    void desloqueioEquipamento(EquipamentoPortaBloqueioRequest equipamentoPortaBloqueioRequest);
 }

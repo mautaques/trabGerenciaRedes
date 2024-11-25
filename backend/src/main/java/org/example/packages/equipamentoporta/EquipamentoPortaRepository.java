@@ -22,8 +22,10 @@ public interface EquipamentoPortaRepository extends JpaRepository<EquipamentoPor
             "where e.sala.id = :salaId")
     List<EquipamentoPorta> findEquipamentosPorta(Integer salaId);
 
-    @Modifying
-    @Transactional
-    @Query("update EquipamentoPorta e set e.fimBloqueio = :dataBloqueio where e.id in :ids")
-    void updateEquipamentos(List<Integer> ids, LocalDateTime dataBloqueio);
+
+    @Query("select e from EquipamentoPorta e where e.id in :ids")
+    List<EquipamentoPorta> findEquipamentoByIds(List<Integer> ids);
+
+    @Query("select e from EquipamentoPorta e where e.fimBloqueio <= :dataAtual")
+    List<EquipamentoPorta> findByData(LocalDateTime dataAtual);
 }

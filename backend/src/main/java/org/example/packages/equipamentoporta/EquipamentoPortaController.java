@@ -7,6 +7,7 @@ import org.example.packages.equipamento.service.EquipamentoService;
 import org.example.packages.equipamentoporta.payload.EquipamentoPortaBloqueioRequest;
 import org.example.packages.equipamentoporta.payload.EquipamentoPortaCreateRequest;
 import org.example.packages.equipamentoporta.service.EquipamentoPortaService;
+import org.example.packages.snmp.SNMPService;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 public class EquipamentoPortaController {
     private EquipamentoPortaService equipamentoPortaService;
     private EquipamentoPortaRepository equipamentoPortaRepository;
+    private SNMPService service;
 
     @PostMapping
     public void create(@RequestBody EquipamentoPortaCreateRequest equipamentoPortaCreateRequest) {
@@ -31,10 +33,20 @@ public class EquipamentoPortaController {
         equipamentoPortaService.bloqueioEquipamentos(equipamentoPortaCreateRequest);
     }
 
+    @PatchMapping("habilitar")
+    public void habilitarPortas(@RequestBody EquipamentoPortaBloqueioRequest equipamentoPortaCreateRequest) {
+        equipamentoPortaService.desloqueioEquipamento(equipamentoPortaCreateRequest);
+    }
+
     @DeleteMapping("{id}")
     public void delete(@PathVariable Integer id) {
         EquipamentoPorta equipamentoPorta = equipamentoPortaRepository.findById(id).orElse(null);
 
         equipamentoPortaRepository.delete(equipamentoPorta);
+    }
+
+    @PostMapping("snmp")
+    public void testeSnmp() {
+        service.setPortState("127.0.0.1", 1, true);
     }
 }
